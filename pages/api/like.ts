@@ -14,7 +14,7 @@ const likeEndpoint
             const {id} = req?.query;
             const publicacao = await PublicacaoModel.findById(id);
             if(!publicacao){
-                res.status(400).json({erro : 'Publicacao nao encontrada'});
+                return res.status(400).json({erro : 'Publicacao nao encontrada'});
             }
 
             // id do usuario que ta curtindo a pub            
