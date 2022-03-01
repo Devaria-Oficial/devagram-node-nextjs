@@ -5,6 +5,7 @@ import {conectarMongoDB} from '../../middlewares/conectarMongoDB';
 import { UsuarioModel } from '../../models/UsuarioModel';
 import nc from 'next-connect';
 import {updload, uploadImagemCosmic} from '../../services/uploadImagemCosmic';
+import { politicaCORS } from '../../middlewares/politicaCORS';
 
 const handler = nc()
     .use(updload.single('file'))
@@ -50,6 +51,17 @@ const handler = nc()
         }
     
         return res.status(400).json({erro : 'Nao foi possivel obter dados do usuario'})
+    })
+    .delete(async (req : NextApiRequest, res : NextApiResponse<RespostaPadraoMsg | any>) => {
+        try{
+            const {userId} = req?.query;
+            const usuario = await UsuarioModel.findById(userId);
+            return res.status(200).json(usuario);
+        }catch(e){
+            console.log(e);
+        }
+    
+        return res.status(400).json({erro : 'Nao foi possivel obter dados do usuario'})
     });
 
 export const config = {
@@ -58,4 +70,4 @@ export const config = {
     }
 }
 
-export default validarTokenJWT(conectarMongoDB(handler));
+export default politicaCORS(validarTokenJWT(conectarMongoDB(handler)));
