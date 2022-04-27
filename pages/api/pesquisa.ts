@@ -2,6 +2,7 @@ import type {NextApiRequest, NextApiResponse} from 'next';
 import { conectarMongoDB } from '../../middlewares/conectarMongoDB';
 import { politicaCORS } from '../../middlewares/politicaCORS';
 import { validarTokenJWT } from '../../middlewares/validarTokenJWT';
+import { SeguidorModel } from '../../models/SeguidorModel';
 import { UsuarioModel } from '../../models/UsuarioModel';
 import type {RespostaPadraoMsg} from '../../types/RespostaPadraoMsg';
 
@@ -28,7 +29,13 @@ const pesquisaEndpoint
                     ]
                 });
 
-                usuariosEncontrados.forEach(e => e.senha = null);
+                usuariosEncontrados.forEach(async userFound => {
+                    const segueEsseUsuario = await SeguidorModel.find({ usuarioId : req?.query?.userId, usuarioSeguidoId : userFound._id});
+                    if(segueEsseUsuario && segueEsseUsuario.length > 0){
+                        userFound.segueEsseUsuario = true;
+                    }
+                    userFound.senha = null
+                });
                 return res.status(200).json(usuariosEncontrados);
             }
         }
