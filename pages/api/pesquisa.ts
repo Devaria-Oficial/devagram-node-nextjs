@@ -18,6 +18,8 @@ const pesquisaEndpoint
                     const segueEsseUsuario = await SeguidorModel.find({ usuarioId: req?.query?.userId, usuarioSeguidoId: usuarioEncontrado._id });
                     if (segueEsseUsuario && segueEsseUsuario.length > 0) {
                         usuarioEncontrado.segueEsseUsuario = true;
+                    }else{
+                        usuarioEncontrado.segueEsseUsuario = false;
                     }
                     usuarioEncontrado.senha = null;
                     return res.status(200).json(usuarioEncontrado);
@@ -37,6 +39,8 @@ const pesquisaEndpoint
                         const segueEsseUsuario = await SeguidorModel.find({ usuarioId: req?.query?.userId, usuarioSeguidoId: userFound._id });
                         if (segueEsseUsuario && segueEsseUsuario.length > 0) {
                             userFound.segueEsseUsuario = true;
+                        }else{
+                            userFound.segueEsseUsuario = false;
                         }
                         userFound.senha = null
                     });
