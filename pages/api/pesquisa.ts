@@ -32,8 +32,6 @@ const pesquisaEndpoint
                     if (segueEsseUsuario && segueEsseUsuario.length > 0) {
                         user.segueEsseUsuario = true;
                     }
-                    user.senha = null;
-
                     return res.status(200).json(user);
                 } else {
                     const { filtro } = req.query;
@@ -47,27 +45,11 @@ const pesquisaEndpoint
                         ]
                     });
 
-                   const users = usuariosEncontrados.map(async userFound => {
-                        const segueEsseUsuario = await SeguidorModel.find({ usuarioId: req?.query?.userId, usuarioSeguidoId: userFound._id });
-                        const user = {
-                            senha: null,
-                            segueEsseUsuario: false,
-                            nome: userFound.nome,
-                            email: userFound.email,
-                            _id: userFound._id,
-                            avatar: userFound.avatar,
-                            seguidores: userFound.seguidores,
-                            seguindo: userFound.seguindo,
-                            publicacoes: userFound.publicacoes,
-                        } as any;
-    
-                        if (segueEsseUsuario && segueEsseUsuario.length > 0) {
-                            user.segueEsseUsuario = true;
-                        } 
-                        user.senha = null
-                        return user
+                    usuariosEncontrados.forEach(userFound => {
+                        userFound.senha = null
                     });
-                    return res.status(200).json(users);
+
+                    return res.status(200).json(usuariosEncontrados);
                 }
             }
             return res.status(405).json({ erro: 'Metodo informado nao e valido' });
